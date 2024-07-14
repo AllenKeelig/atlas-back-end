@@ -1,9 +1,10 @@
 #!/usr/bin/python3
-
+"""This module """
 import requests
 import sys
 
 def get_employee_todo_progress(employee_id):
+    """This module """
     try:
         # Fetch employee details
         user_response = requests.get(f'https://jsonplaceholder.typicode.com/users/{employee_id}')
