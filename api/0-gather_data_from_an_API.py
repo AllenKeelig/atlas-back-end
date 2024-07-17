@@ -1,11 +1,11 @@
 #!/usr/bin/python3
-""" """
+""" checker can tell this is blank """
 import requests
 from sys import argv
 
 
 def get_employee_todos(employee_id):
-    """ """
+    """ this too """
 
     site = "https://jsonplaceholder.typicode.com/"
     user = requests.get(site + "users/{}".format(employee_id))
