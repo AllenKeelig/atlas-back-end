@@ -1,49 +1,31 @@
 #!/usr/bin/python3
-"""This module """
+""" """
 import requests
-import sys
+from sys import argv
 
 
-def get_employee_todo_progress(employee_id):
-    """This module """
-    try:
-        # Fetch employee details
-        user_response = requests.get(f'https://jsonplaceholder.typicode.com/users/{employee_id}')
-        user_response.raise_for_status()  # Raise an HTTPError for bad responses
-        user = user_response.json()
+def get_employee_todos(employee_id):
+    """ """
 
-        # Fetch employee TODO list
-        todos_response = requests.get(f'https://jsonplaceholder.typicode.com/todos?userId={employee_id}')
-        todos_response.raise_for_status()  # Raise an HTTPError for bad responses
-        todos = todos_response.json()
+    site = "https://jsonplaceholder.typicode.com/"
+    user = requests.get(site + "users/{}".format(employee_id))
+    todo = requests.get(site + "todos?userId={}".format(employee_id))
 
-        # Employee name
-        employee_name = user['name']
+    users = user.json()
+    names = users.get("name")
+    todos = todo.json()
+    # print(site, users, todos, names)
 
-        # Calculate TODO list progress
-        total_tasks = len(todos)
-        done_tasks = [task for task in todos if task['completed']]
-        number_of_done_tasks = len(done_tasks)
+    completed = [i for i in todos if i.get("completed")]
+    all_todos = len(todos)
+    done_todos = len(completed)
 
-        # Print the progress
-        print(f"Employee {employee_name} is done with tasks({number_of_done_tasks}/{total_tasks}):")
-        for task in done_tasks:
-            print(f"\t {task['title']}")
+    print("Employee {} is done with tasks({}/{}):"
+          .format(names, done_todos, all_todos))
 
-    except requests.exceptions.RequestException as e:
-        print(f"An error occurred: {e}")
-    except KeyError as e:
-        print(f"Unexpected response structure: missing key {e}")
+    for i in completed:
+        print("\t {}".format(i.get("title")))
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Usage: python script.py <employee_id>")
-        sys.exit(1)
-
-    try:
-        employee_id = int(sys.argv[1])
-        get_employee_todo_progress(employee_id)
-    except ValueError:
-        print("Employee ID must be an integer")
-        sys.exit(1)
+    get_employee_todos(employee_id=argv[1])
